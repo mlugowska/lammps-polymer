@@ -1,0 +1,84 @@
+#single chain MD simulation
+variable   N       equal 50
+
+variable   eps     equal 1.0
+variable   sigma   equal 1.0
+variable   short   equal 2^(1/6)
+variable   long    equal 2.5
+variable   T       equal 1.0
+
+variable   b       equal 15.0
+
+variable   meas      equal   10000
+variable   sim_time equal   10000000 #00000   
+
+#defining lennard-jones type of interactions and bonds
+units           lj
+atom_style      bond
+
+#periodic boundary conditions
+boundary        p p p
+
+#to read system configuration
+read_data       N${N}
+#read_restart    measure/meas.1000000
+
+group           end      type 1 
+group           internal type 2
+group           polymer  type 1 2
+
+#Defining LJ pair interactions
+pair_style      lj/cut ${short}
+pair_modify     shift yes
+pair_coeff      * * ${eps} ${sigma}
+
+#Defining bond interactions
+bond_style      fene
+bond_coeff      1 30.0 1.5 1.0 1.0
+special_bonds   fene
+
+neighbor        0.3 bin
+neigh_modify    delay 1
+comm_modify  cutoff 2.5
+
+#Set-up equations of motion and Langevin thermostat
+fix             1 all nve
+fix             2 all langevin $T $T 0.5 13 #last is seed
+
+thermo         10000
+thermo_style    custom step temp pe ke press 
+
+timestep        0.005
+
+#writing data to file
+dump            1 all custom ${meas} shrink.dat id type x y z #vx vy vz fx fy fz
+dump_modify     1 sort id
+
+#to store configurations of system 
+restart          1000000  cfg
+
+#box deformation
+fix             3 all deform 1 x final -$b $b y final -$b $b z final -$b $b units box
+run   100000
+unfix 3
+
+undump 1
+
+dump            1 all custom ${meas} dane.dat id type x y z #vx vy vz fx fy fz
+dump_modify     1 sort id
+
+#number of integration steps
+run ${sim_time}
+
+#compute c1 polymer1 chunk/atom molecule
+#compute myChunk1 polymer1 gyration/chunk c1
+#variable         RGave1  equal  ave(c_myChunk1)
+#fix              outRG1  polymer1  ave/time 100 100 ${meas} v_RGave1  file  rg1_lammps.dat ave running
+
+
+#compute c2 polymer1 gyration 
+#variable RGave equal ave(c_c2)
+#fix outRG  polymer1  ave/time 100 100 ${meas} c_c2  file  rg_lammps.dat ave running
+
+#compute c3 polymer1 gyration/shape c2
+#fix outshape polymer1 ave/time 100 100 ${meas} c_c3[*] file aniso_lammps.dat mode vector ave running  
