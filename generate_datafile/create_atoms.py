@@ -1,5 +1,5 @@
 import random
-from typing import Tuple, TextIO, List
+from typing import Tuple, TextIO, List, Dict
 
 from utils import vars
 
@@ -42,9 +42,9 @@ def get_atom_charge(atom_type: str = 'counter') -> int:
     :return:
     """
     if atom_type == 'head':
-        return 1
+        return 9
     if atom_type == 'tail':
-        return -1
+        return -9
     return 0
 
 
@@ -79,7 +79,7 @@ def write_backbone_atoms(file: TextIO, add_branch: bool):
     write_atom(file, 'tail', atom_ids, x, y, z + vars.N_HEADS + vars.N)
 
 
-def create_branch_atoms(file: TextIO) -> dict[int, List]:
+def create_branch_atoms(file: TextIO) -> Dict[int, List]:
     """
     :param file:
     :return: dict - key is id of an atom to which a branch will be added, value is a list of new atoms in branch
@@ -102,7 +102,7 @@ def create_branch_atoms(file: TextIO) -> dict[int, List]:
     return branch_atoms
 
 
-def write_branch_atoms(file: TextIO, branch_atoms_lines: dict[int, List]):
+def write_branch_atoms(file: TextIO, branch_atoms_lines: Dict[int, List]):
     for key, values in branch_atoms_lines.items():
         for value in values:
             file.write(value)

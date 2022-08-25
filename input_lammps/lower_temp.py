@@ -1,17 +1,16 @@
 from utils import vars
 
-add_branch = True
+add_branch = False
 if add_branch:
-    FILENAME = f"data/N{vars.N_ATOMS}/N{vars.N_ATOMS_TOTAL}_lammps.in"
+    FILENAME = f"../data/N{vars.N_ATOMS}_{vars.N_ATOM_IN_BRANCH}_in_branch_{vars.N_ATOMS_TOTAL}_total/N{vars.N_ATOMS_TOTAL}_sim.in"
 else:
-    FILENAME = f"data/N{vars.N_ATOMS}/N{vars.N_ATOMS}_lammps.in"
+    FILENAME = f"../data/N{vars.N_ATOMS}/N{vars.N_ATOMS}_sim.in"
 
 with open(FILENAME, "w") as file:
     file.write(f"# LAMMPS input file - ionic\n\n")
 
     # ---- variables ---- #
     file.write(f"# ---- variables ----\n")
-    file.write(f"variable      N                  equal {vars.N_ATOMS_TOTAL if add_branch else vars.N_ATOMS}\n")
     file.write(f"variable      print_thermo       equal 1000\n")
     file.write("\n")
     file.write(f"variable      bx                 equal {vars.BX}\n")
@@ -23,7 +22,6 @@ with open(FILENAME, "w") as file:
     file.write(f"variable      epsP               equal 1.0\n")
     file.write(f"variable      epsP_NP            equal 1.0\n")
     file.write(f"variable      epsNP              equal 1.0\n")
-    file.write(f"variable      Th                 equal 4.0\n")
     file.write(f"variable      Th                 equal 4.0\n")
     file.write(f"variable      T                  equal 2.0\n")
     file.write(f"variable      gamma              equal 2.0\n")
@@ -53,7 +51,7 @@ with open(FILENAME, "w") as file:
 
     # ---- read data ----
     file.write("# ---- read data ----\n")
-    file.write("read_data      N${N}\n")
+    file.write("read_restart      shrinked.restart.1000000\n")
     file.write("\n")
 
     # ---- group data ----
@@ -141,28 +139,14 @@ with open(FILENAME, "w") as file:
     file.write(f"timestep     {vars.TIMESTEP}\n")
     file.write("\n")
 
-    # ---- replicate the current simulation ----
-    file.write("# ---- replicate the current simulation one or more times in each dimension ----\n")
-    file.write(f"replicate    {vars.REPLICA_X} {vars.REPLICA_Y} {vars.REPLICA_Z}\n")
-    file.write("\n")
-
-    # ---- run the simulation - increase system density----
-    file.write("# ---- run the simulation - increase system density ----\n")
-    file.write("# set constant volume, temperature and molecules number\n")
-    file.write("fix          2 all nvt temp ${Th} ${Th} 0.1\n")
-    file.write("# change the simulation box size/shape - increase density\n")
-    file.write("fix          4 all deform 1 x final 0 ${bx} y final 0 ${by} z final 0 ${bz} units box\n")
-    file.write("run          ${sim_time}\n")
-    file.write("\n")
-
     # ---- run the simulation to establish the system ----
     file.write("# ---- run the simulation - establish system density ----\n")
     file.write("# turn off changing the simulation box size\n")
-    file.write("unfix        4\n")
+    file.write("fix          2 all nvt temp ${Th} ${Th} 0.1\n")
     file.write("# run the simulation to establish the system with increased density\n")
 
     # ---- create dump ----
-    file.write(f"dump         1 all custom {vars.DUMP_STEP} constant_temp_high_1.dat id mol type x y z\n")
+    file.write(f"dump         1 all custom {vars.DUMP_STEP} constant_temp_high_1.lammpsdump id mol type x y z\n")
     file.write("dump_modify  1  sort id\n")
 
     file.write("run          ${sim_time}\n")
@@ -176,7 +160,7 @@ with open(FILENAME, "w") as file:
     file.write("fix          2 all nvt temp ${Th} ${T} 0.1\n")
 
     # ---- create dump ----
-    file.write(f"dump         2 all custom {vars.DUMP_STEP} temp_high_temp_low_2.dat id mol type x y z\n")
+    file.write(f"dump         2 all custom {vars.DUMP_STEP} temp_high_temp_low_2.lammpsdump id mol type x y z\n")
     file.write("dump_modify  2  sort id\n")
 
     file.write("run          ${sim_time}\n")
@@ -189,7 +173,7 @@ with open(FILENAME, "w") as file:
     file.write("unfix        2\n")
     file.write("fix          2 all nvt temp ${T} ${T} 0.1\n")
 
-    file.write(f"dump         3 all custom {vars.DUMP_STEP} constant_temp_low_3.dat id mol type x y z\n")
+    file.write(f"dump         3 all custom {vars.DUMP_STEP} constant_temp_low_3.lammpsdump id mol type x y z\n")
     file.write("dump_modify  3  sort id\n")
 
     file.write("run          ${sim_time}\n")

@@ -24,8 +24,8 @@ def get_file_mode(add_branch: bool) -> str:
 
 def get_filename(add_branch: bool) -> str:
     if add_branch:
-        create_dir(f"../data/N{vars.N_ATOMS_TOTAL}")
-        return f"../data/N{vars.N_ATOMS_TOTAL}/N{vars.N_ATOMS_TOTAL}"
+        create_dir(f"../data/N{vars.N_ATOMS}_{vars.N_ATOM_IN_BRANCH}_in_branch_{vars.N_ATOMS_TOTAL}_total")
+        return f"../data/N{vars.N_ATOMS}_{vars.N_ATOM_IN_BRANCH}_in_branch_{vars.N_ATOMS_TOTAL}_total/N{vars.N_ATOMS_TOTAL}"
     create_dir(f"../data/N{vars.N_ATOMS}")
     return f"../data/N{vars.N_ATOMS}/N{vars.N_ATOMS}"
 

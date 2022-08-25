@@ -1,4 +1,4 @@
-from typing import TextIO, List
+from typing import TextIO, List, Dict
 
 from utils import vars
 
@@ -12,7 +12,7 @@ def add_bond_id(bonds: List[str]):
     return new_bonds
 
 
-def create_branch_bonds(branch_atoms: dict[int, List]):
+def create_branch_bonds(branch_atoms: Dict[int, List]):
     # ostatni bond ma id vars.N_BONDS
     bonds_list = []
 

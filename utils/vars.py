@@ -1,14 +1,14 @@
 # ================================ MONOMER DEFINITION ==============================
 # --------------------------- BACKBONE ---------------------------------------------
-N = 7  # backbone (without head and anti-ion
-N_HEADS = 3  # number of heads positively charged
+N = 10  # backbone (without head and anti-ion
+N_HEADS = 1  # number of heads positively charged
 N_ANTIIONS = N_HEADS  # number of anti-ions negatively charged
 N_ATOMS = N + N_HEADS + N_ANTIIONS  # number of all atoms
 N_BONDS = N + N_HEADS - 1
 
 # --------------------------- BRANCH -----------------------------------------------
-N_BRANCH_STEP = 2  # add branch every X atoms (without heads)
-N_ATOM_IN_BRANCH = 2  # how many atoms in each branch
+N_BRANCH_STEP = 1  # add branch every X atoms (without heads)
+N_ATOM_IN_BRANCH = 0  # how many atoms in each branch
 N_ATOMS_IN_BRANCHES = (N // N_BRANCH_STEP) * N_ATOM_IN_BRANCH if N_ATOM_IN_BRANCH else 0
 N_ATOMS_TOTAL = N_ATOMS + N_ATOMS_IN_BRANCHES
 
@@ -48,9 +48,9 @@ REPLICA_Z = 9
 
 MOLECULES = REPLICA_X * REPLICA_Y * REPLICA_Z
 
-BX = BY = BZ = (MOLECULES * N_ATOMS_TOTAL / 0.8) ** (1/3)
+BX = BY = BZ = round((MOLECULES * N_ATOMS_TOTAL / 0.8) ** (1/3), 2)
 
 SIMULATION_TIME = 1000000
 DUMP_STEP = 100000
 
-TIMESTEP = 0.0001
+TIMESTEP = 0.001
