@@ -12,13 +12,9 @@ from scipy.spatial.distance import pdist
 # data = MDAnalysis.Universe(DUMPFILE, atom_type='id type x y z charge mol')
 
 # tail with branches
-DUMPFILE_BRANCHES = '/home/b02/prometheus/N12_2_in_branch_32_total/T_4_to_2/2_eq/constant_temp_low_3.lammpsdump'
+# DUMPFILE_BRANCHES = '/home/b02/prometheus/N12_8_in_branch_92_total/T_4_to_1/2_eq_nvt_d_0_9/constant_temp_low_3.lammpsdump'
 # DUMPFILE_BRANCHES = '/home/b02/prometheus/N12_8_in_branch_92_total/T_4_single_molecule/constant_temp_high_1.lammpsdump'
-data_branches = MDAnalysis.Universe(DUMPFILE_BRANCHES, atom_type='id type x y z charge mol')
-
-# ---------- GET ATOMS POSITIONS (FROM ONE MOLECULE) ----------------------
-# positions = data.atoms[1:11].positions
-positions_branches = data_branches.atoms[1:11].positions
+# data_branches = MDAnalysis.Universe(DUMPFILE_BRANCHES, atom_type='id type x y z charge mol')
 
 
 # ---------- CALCULATE MEAN DISTANCE FROM HEAD TO LAST TAIL'S ATOM ----------------------
@@ -34,11 +30,21 @@ def dist(p1: ndarray, p2: ndarray) -> float:
     return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2)
 
 
-# mean_distance = dist(positions[0], positions[-1])
-# mean_distance_branches = dist(positions_branches[0], positions_branches[-1])
+# ---------- GET ATOMS POSITIONS (FROM ONE MOLECULE) ----------------------
+# polymers = []
+# # positions = data.atoms[1:11].positions
+# for atom_id in range(0, 496800, 92):
+#     positions_branches = data_branches.atoms[atom_id:atom_id + 10].positions
 #
-# print(f"Mean distance from head to last tail's atom: {mean_distance}")
-# print(f"Mean distance from head to last tail's atom (branches): {mean_distance_branches}")
+#     # mean_distance = dist(positions[0], positions[-1])
+#     mean_distance_branches = dist(positions_branches[0], positions_branches[-1])
+#     if mean_distance_branches < 10:
+#         polymers.append(mean_distance_branches)
+# print(polymers)
+# mean = np.mean(polymers)
+# #
+# # print(f"Mean distance from head to last tail's atom: {mean_distance}")
+# print(f"Mean distance from head to last tail's atom (branches): {mean}")
 
 
 # METHOD 2.
@@ -52,9 +58,8 @@ def compute_average_distance(coords: ndarray) -> ndarray:
     """
     return np.mean(pdist(coords))
 
-
-# selected_atoms = np.vstack((positions[0], positions[-1]))
-selected_atoms_branches = np.vstack((positions_branches[0], positions_branches[-1]))
-
-# print(f"Mean distance from head to last tail's atom: {compute_average_distance(selected_atoms)}")
-print(f"Mean distance from head to last tail's atom (branches): {compute_average_distance(selected_atoms_branches)}")
+# # selected_atoms = np.vstack((positions[0], positions[-1]))
+# selected_atoms_branches = np.vstack((positions_branches[0], positions_branches[-1]))
+#
+# # print(f"Mean distance from head to last tail's atom: {compute_average_distance(selected_atoms)}")
+# print(f"Mean distance from head to last tail's atom (branches): {compute_average_distance(selected_atoms_branches)}")

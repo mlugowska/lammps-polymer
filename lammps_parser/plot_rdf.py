@@ -2,13 +2,14 @@ import matplotlib.pyplot as plt
 import pandas
 
 # podstawowe dane
-n = 'N12_2_in_branch_32_total'
+n = 'N12'
 n_bin = 10000
 T = '1'
-PATH = '/home/b02/prometheus'
+PATH = '/home/b02/Desktop'
 all = False
 
-dane_wszystkie = pandas.read_csv(f'{PATH}/{n}/T_4_to_{T}/3_rdf_npt/rdf_lammps.dat', delimiter=' ', skiprows=4, header=None)
+# dane_wszystkie = pandas.read_csv(f'{PATH}/{n}/T_4_to_{T}/3_rdf_nvt_d_0_9/N12_rdf_no_override.dat', delimiter=' ', skiprows=4, header=None)
+dane_wszystkie = pandas.read_csv(f'{PATH}/N12_rdf_no_override.dat', delimiter=' ', skiprows=4, header=None)
 
 if all:
     pairs = ('11', '12', '22', '23', '13', '33')

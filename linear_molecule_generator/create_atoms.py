@@ -54,29 +54,30 @@ def get_branch_atom_id(branch_atoms: dict, branch_id: int, branch_atom_number: i
     return int(branch_atoms[branch_id - vars.N_BRANCH_STEP][-1].split(" ")[0]) + branch_atom_number
 
 
-def write_atom(file: TextIO, atom_type: str, n_atoms, x, y, z):
+def write_atom(file: TextIO, atom_type: str, linear:bool, n_atoms, x, y, z):
     for atom_id in n_atoms:
-        file.write(
-            f"{atom_id} {get_atom_type(atom_type=atom_type)} {round(x, 5)} {round(y, 5)} {round(z, 5)} "
-            f"{get_atom_charge(atom_type=atom_type)} {vars.MOLECULE_ID}\n")
-        z += 1
+        if linear:
+            file.write(
+                f"{atom_id} {get_atom_type(atom_type=atom_type)} {round(x, 5)} {round(y, 5)} {round(z, 5)} "
+                f"{get_atom_charge(atom_type=atom_type)} {vars.MOLECULE_ID}\n")
+            z += 1
 
 
-def write_backbone_atoms(file: TextIO, add_branch: bool):
+def write_backbone_atoms(file: TextIO, add_branch: bool, linear: bool):
     file.write("Atoms\n\n")
     x, y, z = get_init_coords(add_branch)
 
     # HEAD
     head_ids = range(1, vars.N_HEADS + 1)
-    write_atom(file, 'head', head_ids, x, y, z)
+    write_atom(file=file, atom_type='head', linear=linear, n_atoms=head_ids, x=x, y=y, z=z)
 
     # COUNTER
     atom_ids = range(vars.N_HEADS + 1, vars.N + vars.N_HEADS + 1)
-    write_atom(file, '', atom_ids, x, y, z + vars.N_HEADS)
+    write_atom(file=file, atom_type='', linear=linear, n_atoms=atom_ids, x=x, y=y, z=z + vars.N_HEADS)
 
     # TAIL
     atom_ids = range(vars.N + vars.N_HEADS + 1, vars.N_ATOMS + 1)
-    write_atom(file, 'tail', atom_ids, x, y, z + vars.N_HEADS + vars.N)
+    write_atom(file=file, atom_type='tail', linear=linear, n_atoms=atom_ids, x=x, y=y, z=z + vars.N_HEADS + vars.N)
 
 
 def create_branch_atoms(file: TextIO) -> Dict[int, List]:
