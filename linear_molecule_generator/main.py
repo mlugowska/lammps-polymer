@@ -6,7 +6,8 @@ Create linear molecule with or without branches
 
 """
 
-add_branch = True
-linear=True
+add_branch = False
+linear=False
+cyclic=True
 
-main(add_branch, linear)
+main(add_branch, linear, cyclic)

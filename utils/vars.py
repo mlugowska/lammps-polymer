@@ -1,7 +1,7 @@
 # ================================ MONOMER DEFINITION ==============================
 # --------------------------- BACKBONE ---------------------------------------------
-N = 10  # backbone (without head and anti-ion
-N_HEADS = 11  # number of heads positively charged
+N = 4  # backbone (without head and anti-ion
+N_HEADS = 1  # number of heads positively charged
 N_ANTIIONS = N_HEADS  # number of anti-ions negatively charged
 N_ATOMS = N + N_HEADS + N_ANTIIONS  # number of all atoms
 N_BONDS = N + N_HEADS - 1

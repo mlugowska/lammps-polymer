@@ -30,7 +30,7 @@ def get_filename(add_branch: bool) -> str:
     return f"../data/N{vars.N_ATOMS}/N{vars.N_ATOMS}"
 
 
-def main(add_branch: bool, linear: bool) -> None:
+def main(add_branch: bool, linear: bool, cyclic: bool) -> None:
     with open(get_filename(add_branch), "w") as file:
         file.write("# LAMMPS data file\n\n")
 
@@ -57,7 +57,7 @@ def main(add_branch: bool, linear: bool) -> None:
         write_masses(file)
 
         # ---- head atoms ---- #
-        write_backbone_atoms(file, add_branch, linear)
+        write_backbone_atoms(file, add_branch, linear, cyclic)
 
     with open(get_filename(add_branch), get_file_mode(add_branch)) as file_to_append:
 
